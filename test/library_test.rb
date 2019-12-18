@@ -27,12 +27,17 @@ class AuthorTest < Minitest::Test
   end
 
   def test_it_can_add_authors_and_books
-
-
     @dpl.add_author(@charlotte_bronte)
     @dpl.add_author(@harper_lee)
     assert_equal [@charlotte_bronte, @harper_lee], @dpl.authors
     assert_equal [@jane_eyre, @professor, @villette, @mockingbird], @dpl.books
+  end
+
+  def test_it_can_create_a_publication_timeframe
+    @dpl.add_author(@charlotte_bronte)
+    @dpl.add_author(@harper_lee)
+    assert_equal ({:start=>"1847", :end=>"1857"}), @dpl.publication_time_frame_for(@charlotte_bronte)
+    assert_equal ({:start=>"1960", :end=>"1960"}), @dpl.publication_time_frame_for(@harper_lee)
   end
 end
 
