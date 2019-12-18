@@ -20,9 +20,10 @@ class AuthorTest < Minitest::Test
 
   def test_it_can_write_a_book
     jane_eyre = @charlotte_bronte.write("Jane Eyre", "October 16, 1847")
-
     assert_equal Book, jane_eyre.class
-    assert_instance_of "Jane Eyre", jane_eyre.title
+    assert_equal "Jane Eyre", jane_eyre.title
+    villette = @charlotte_bronte.write("Villette", "1853")
+    assert_equal [jane_eyre, villette], @charlotte_bronte.books
   end
 end
 
@@ -47,11 +48,11 @@ end
   # #=> #<Book:0x00007fb896e22538...>
   #
   # pry(main)> jane_eyre.class
-  # #=> Book
-  #
-  # pry(main)> jane_eyre.title
-  # #=> "Jane Eyre"
-  #
+  # # #=> Book
+  # #
+  # # pry(main)> jane_eyre.title
+  # # #=> "Jane Eyre"
+  # #
   # pry(main)> charlotte_bronte.write("Villette", "1853")
   # #=> #<Book:0x00007fb8980aaca0...>
   #
