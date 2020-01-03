@@ -2,7 +2,7 @@ require './lib/book'
 require './lib/author'
 
 class Library
-  attr_reader :name, :books, :authors, :checked_out_books
+  attr_reader :name, :authors, :books, :checked_out_books
 
   def initialize(name)
     @name = name
@@ -13,23 +13,19 @@ class Library
 
   def add_author(author)
     @authors << author
-    @books = @authors.map { |author| author.books }.flatten
-      # require "pry"; binding.pry
+    author.books.each {|book| @books << book}
   end
 
   def publication_time_frame_for(author)
-    publication_years_array = author.books.map { |book| book.publication_year }
-# require "pry"; binding.pry
-    earliest = publication_years_array.min
-    latest = publication_years_array.max
-# require "pry"; binding.pry
-    timeframe = {:start => earliest, :end => latest}
+    year_min = author.books.min_by {|book| book.publication_year}
+    year_max = author.books.max_by {|book| book.publication_year}
+    time_frame = {:start=>"#{year_min.publication_year}", :end=>"#{year_max.publication_year}"}
   end
 
   def checkout(book)
-    if @books.include?(book)
-      @checked_out_books << @books.delete(book)
-      # require "pry"; binding.pry
+    if @books.include?(book) && (@checked_out_books.include?(book) == false)
+      @checked_out_books << book
+      book.checkout_counter += 1
       true
     else
       false
@@ -37,8 +33,14 @@ class Library
   end
 
   def return(book)
-   @books << @checked_out_books.delete(book)
-   require "pry"; binding.pry
- end
+    @checked_out_books.delete(book)
+    @books << book
+  end
 
+  def most_popular_book
+    sorted = @checked_out_books.sort_by do |book|
+      book.checkout_counter
+    end
+    sorted.last
+  end
 end
